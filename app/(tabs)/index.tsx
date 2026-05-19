@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -54,6 +55,22 @@ export default function HomeScreen() {
   });
   const backPressed = useRef(0);
 
+  //notifications state
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [loadingNotifications, setLoadingNotifications] = useState(false);
+
+  //fetch unread notifications count
+  const fetchUnreadCount = async () => {
+    try {
+      const response = await apiFetch("/notifications/unread-count");
+      if (response?.success) {
+        setUnreadCount(response.count || 0);
+      }
+    } catch (error) {
+      console.error("Error fetching unread count:", error);
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
@@ -77,6 +94,8 @@ export default function HomeScreen() {
         backAction,
       );
 
+      fetchUnreadCount(); // Refresh badge saat kembali ke home
+      
       return () => {
         backHandler.remove();
       };
@@ -186,6 +205,16 @@ export default function HomeScreen() {
 
   useEffect(() => {
     fetchTravelDocuments();
+    fetchUnreadCount();
+  }, []);
+
+  useEffect(() => {
+    // Polling setiap 30 detik untuk update badge
+    const interval = setInterval(() => {
+      fetchUnreadCount();
+    }, 30_000);
+
+    return () => clearInterval(interval); // cleanup saat unmount
   }, []);
 
   // const formatDate = (dateString: string) => {
@@ -401,7 +430,7 @@ export default function HomeScreen() {
         }
       >
         {/* Header   */}
-        <View style={styles.header}>
+        {/* <View style={styles.header}>
           <View style={styles.headerTextRow}>
             <Text style={styles.welcomeText}>Halo, {userName}</Text>
           </View>
@@ -411,6 +440,32 @@ export default function HomeScreen() {
               style={styles.logo}
               source={require("@/assets/images/logo.mobile.png")}
             />
+          </View>
+        </View> */}
+        <View style={styles.header}>
+          <Text style={styles.welcomeText}>Halo, {userName}</Text>
+          <View style={styles.rightHeader}>
+            <TouchableOpacity 
+              style={styles.notificationButton}
+              onPress={() => router.push("/detail/notification")} // buat screen ini nanti
+            >
+              <Ionicons name="notifications" size={30} color="#f59e0b" />
+              {unreadCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
+
+            {/* Logo RekaTrack */}
+            <View style={styles.headerLogo}>
+              <Image
+                style={styles.logo}
+                source={require("@/assets/images/logo.mobile.png")}
+              />
+            </View>
           </View>
         </View>
 
@@ -522,6 +577,15 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     marginTop: 10,
   },
+  rightHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },  
+  notificationButton: {
+    position: "relative",
+    padding: 1,
+  },
   headerTextRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -529,7 +593,7 @@ const styles = StyleSheet.create({
   headerLogo: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
+    gap: 10,
   },
   welcomeText: {
     fontSize: 18,
@@ -678,6 +742,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 4,
+  },
+  badge: {
+    position: "absolute",
+    top: 2,
+    right: 2,
+    backgroundColor: "#ef4444",
+    borderRadius: 10,
+    minWidth: 18,
+    height: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 4,
+  },
+
+  badgeText: {
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "bold",
   },
   statusBadge: {
     paddingHorizontal: 8,

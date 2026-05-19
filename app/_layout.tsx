@@ -5,11 +5,12 @@ import {
 } from "@react-navigation/native";
 import { Stack, router, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import "react-native-reanimated";
 import { BackHandler, Platform } from "react-native";
+import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import "@/utils/locationTask";
+import { registerForPushNotificationsAsync, setupNotificationListeners } from "@/utils/notifications";
 import { useEffect } from "react";
 
 export const unstable_settings = {
@@ -36,6 +37,13 @@ export default function RootLayout() {
 
     return () => sub.remove();
   }, [pathname]);
+
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+    const cleanup = setupNotificationListeners();
+    
+    return cleanup;
+  }, []);
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>

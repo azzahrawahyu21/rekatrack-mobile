@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "rekatrack-mobile",
-    "slug": "rekatrack-mobile",
+    "name": "rekatrack-mobile-dev",
+    "slug": "rekatrack-mobile-dev",
     "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/images/logo.mobile.png",
-    "scheme": "rekatrack-mobile",
+    "scheme": "rekatrack-mobile-dev",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -18,14 +18,27 @@
         "NSPhotoLibraryAddUsageDescription": "Aplikasi dapat menyimpan hasil foto bukti pengiriman bila diperlukan.",
         "NSLocationWhenInUseUsageDescription": "Aplikasi membutuhkan akses lokasi untuk tracking pengiriman.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Aplikasi membutuhkan akses lokasi background agar tracking tetap berjalan saat aplikasi tidak dibuka.",
-        "UIBackgroundModes": ["location"]
+        "NSLocationAlwaysUsageDescription": "Aplikasi membutuhkan akses lokasi background agar tracking tetap berjalan saat aplikasi tidak dibuka.",
+        "NSUserNotificationsUsageDescription": "Aplikasi ini membutuhkan izin notifikasi untuk memberitahu status pengiriman.",
+        "UIBackgroundModes": [
+          "location"
+        ]
       }
     },
     "android": {
-      "package": "com.reka.rekatrackmobile",
+      "package": "com.reka.rekatrackmobileapp",
       "icon": "./assets/images/logo.mobile.png",
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.FOREGROUND_SERVICE_LOCATION",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.POST_NOTIFICATIONS"
+      ]
     },
     "web": {
       "output": "static",
@@ -33,6 +46,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-notifications",
       [
         "expo-splash-screen",
         {
@@ -60,7 +74,8 @@
           "locationWhenInUsePermission": "Aplikasi membutuhkan akses lokasi untuk tracking pengiriman.",
           "locationAlwaysAndWhenInUsePermission": "Aplikasi membutuhkan akses lokasi background agar tracking tetap berjalan saat aplikasi tidak dibuka.",
           "isAndroidBackgroundLocationEnabled": true,
-          "isIosBackgroundLocationEnabled": true
+          "isIosBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
         }
       ]
     ],
@@ -68,18 +83,18 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "200d2d34-f72d-48a7-a723-d117f19be0cc"
-      }
-    },
-    "owner": "fajarbudhi17",
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
       "url": "https://u.expo.dev/200d2d34-f72d-48a7-a723-d117f19be0cc"
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c2d6a50e-96b8-457f-be84-7f43872bbb2c"
+      }
+    },
+    "owner": "azzahrawhyol"
   }
 }
