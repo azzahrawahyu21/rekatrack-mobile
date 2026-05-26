@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "rekatrack-mobile-dev",
-    "slug": "rekatrack-mobile-dev",
+    "name": "rekatrack-mobile",
+    "slug": "rekatrack-mobile",
     "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/images/logo.mobile.png",
-    "scheme": "rekatrack-mobile-dev",
+    "scheme": "rekatrack-mobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -26,7 +26,7 @@
       }
     },
     "android": {
-      "package": "com.reka.rekatrackmobileapp",
+      "package": "com.reka.rekatrackmobile",
       "icon": "./assets/images/logo.mobile.png",
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -46,7 +46,6 @@
     },
     "plugins": [
       "expo-router",
-      "expo-notifications",
       [
         "expo-splash-screen",
         {
@@ -83,18 +82,18 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "200d2d34-f72d-48a7-a723-d117f19be0cc"
+      }
+    },
+    "owner": "fajarbudhi17",
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
       "url": "https://u.expo.dev/200d2d34-f72d-48a7-a723-d117f19be0cc"
-    },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "c2d6a50e-96b8-457f-be84-7f43872bbb2c"
-      }
-    },
-    "owner": "azzahrawhyol"
+    }
   }
 }

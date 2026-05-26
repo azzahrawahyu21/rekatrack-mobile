@@ -1,9 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// export const API_URL =
-//   // process.env.REKATRACK_API ?? "https://rekatrack.ptrekaindo.co.id/api";
-//   process.env.REKATRACK_API ?? "https://treponemal-eryn-vanillic.ngrok-free.dev/api";
-const API_URL = "https://treponemal-eryn-vanillic.ngrok-free.dev/api";
+export const API_URL =
+  process.env.REKATRACK_API ?? "https://rekatrack.ptrekaindo.co.id/api";
 
 const DEFAULT_TIMEOUT_MS = 15000;
 
