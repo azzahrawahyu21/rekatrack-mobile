@@ -138,6 +138,9 @@ export default function NotificationScreen() {
             pathname: "/detail",
             params: { id: item.travelDocument.id.toString() },
           });
+        } else {
+            // Fallback jika notifikasi tidak punya travel document
+            console.warn("Notifikasi ini tidak memiliki travel document");
         }
       }}
     >
