@@ -83,7 +83,10 @@ export default function NotificationScreen() {
 
   const markAllAsRead = async () => {
     try {
-      await apiFetch("/notifications/mark-all-read", { method: "POST" });
+      // await apiFetch("/notifications/mark-all-read", { method: "POST" });
+      await apiFetch("/notifications/read-all", {
+        method: "POST",
+      });
       setUnreadCount(0);
       await fetchNotifications(false); // Refresh data tanpa tampil loader
     } catch (error) {

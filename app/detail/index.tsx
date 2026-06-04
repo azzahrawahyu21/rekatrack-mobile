@@ -1,7 +1,8 @@
 // app/detail/index.tsx
+import { apiFetch } from "@/utils/api";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -44,30 +45,67 @@ type TravelDocument = {
 };
 
 export default function DetailScreen() {
+  // const params = useLocalSearchParams();
+  // const [openingScan, setOpeningScan] = useState(false);
+
+  // // Ambil items langsung dari params (karena sudah di-load di API detail)
+  // const items: Item[] = params.items ? JSON.parse(String(params.items)) : [];
+
+  // const travelId = Number(params.id);
+
+  // const data: TravelDocument[] = [
+  //   {
+  //     id: travelId,
+  //     no_travel_document: String(params.no ?? ""),
+  //     send_to: String(params.send_to ?? "-"),
+  //     project: String(params.project ?? "-"),
+  //     status: String(params.status ?? "-"),
+  //     // date_no_travel_document:
+  //     //   typeof params.date === "string" ? params.date : "",
+  //     posting_date: String(params.posting_date ?? ""),
+  //     document_date: String(params.document_date ?? ""),
+  //     po_number: String(params.po_number ?? "-"),
+  //     reference_number: String(params.reference_number ?? "-"),
+  //     items: items,
+  //   },
+  // ];
+
   const params = useLocalSearchParams();
   const [openingScan, setOpeningScan] = useState(false);
 
-  // Ambil items langsung dari params (karena sudah di-load di API detail)
-  const items: Item[] = params.items ? JSON.parse(String(params.items)) : [];
+  const [data, setData] = useState<TravelDocument[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const travelId = Number(params.id);
 
-  const data: TravelDocument[] = [
-    {
-      id: travelId,
-      no_travel_document: String(params.no ?? ""),
-      send_to: String(params.send_to ?? "-"),
-      project: String(params.project ?? "-"),
-      status: String(params.status ?? "-"),
-      // date_no_travel_document:
-      //   typeof params.date === "string" ? params.date : "",
-      posting_date: String(params.posting_date ?? ""),
-      document_date: String(params.document_date ?? ""),
-      po_number: String(params.po_number ?? "-"),
-      reference_number: String(params.reference_number ?? "-"),
-      items: items,
-    },
-  ];
+  const fetchDetail = async () => {
+    try {
+      setLoading(true);
+
+      const response = await apiFetch(`/travel-document/${travelId}`);
+
+      console.log("DETAIL RESPONSE:", response);
+
+      // if (response?.success) {
+      //   setData([response.data]);
+      // }
+      if (response?.data) {
+        setData([response.data]);
+      }
+
+      console.log("SET DATA:", response.data);
+    } catch (error) {
+      console.error("Gagal mengambil detail:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (travelId) {
+      fetchDetail();
+    }
+  }, [travelId]);
 
   // const formatDate = (date: string) => {
   //   if (!date) return "-";
@@ -189,6 +227,26 @@ export default function DetailScreen() {
               </Text>
             </View>
           </View>
+          {item.status === "Belum terkirim" && (
+            <View style={styles.col}>
+              <Text style={styles.label}>Aksi</Text>
+
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: "/(tabs)/scan",
+                    params: {
+                      id: String(item.id),
+                    },
+                  })
+                }
+                style={[styles.actionButton, { backgroundColor: "#364981" }]}
+              >
+                <Text style={styles.actionButtonText}>Mulai Pengiriman</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          
           {item.status === "Sedang dikirim" && (
             <View style={styles.col}>
               <Text style={styles.label}>Aksi</Text>
@@ -219,13 +277,11 @@ export default function DetailScreen() {
       <Text style={styles.sectionTitleOuter}>Daftar Barang</Text>
 
       {/* KOSONGKAN JIKA TIDAK ADA BARANG */}
-      {items.length === 0 ? (
+      {item.items?.length === 0 ? (
         <Text style={styles.emptyText}>Tidak ada barang</Text>
       ) : (
-        /* DAFTAR CARD BARANG TERPISAH */
         <View style={styles.itemsListContainer}>
-          {items.map((it, index) => (
-            <View key={it.id || index} style={styles.itemSeparateCard}>
+          {item.items?.map((it, index) => (            <View key={it.id || index} style={styles.itemSeparateCard}>
               {/* Header: Nomor + Nama + Kode */}
               <View style={styles.itemSeparateHeader}>
                 <Text style={styles.itemSeparateIndex}>{index + 1}.</Text>
@@ -274,6 +330,21 @@ export default function DetailScreen() {
       )}
     </>
   );
+
+  if (loading) {
+    console.log("DATA STATE:", data);
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text>Memuat data...</Text>
+      </View>
+    );
+  }
 
   return (
     <>
